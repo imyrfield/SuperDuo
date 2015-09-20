@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal|top"
+    android:orientation="horizontal"
+    tools:context="it.jaschke.alexandria.AddBook"
+    >
+
+    <TextView
+        android:id="@+id/bookTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/bookCover"
+        android:layout_alignRight="@+id/bookCover"
+        android:layout_marginTop="25dp"
+        android:paddingRight="20dp"
+        android:textIsSelectable="true"
+        android:textSize="@dimen/head_line"
+        android:textStyle="bold"
+        tools:text="Paddington Bear"
+        android:layout_marginRight="40dp"
+        />
+
+    <TextView
+        android:id="@+id/bookSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/bookCover"
+        android:layout_alignRight="@+id/bookCover"
+        android:layout_below="@+id/bookTitle"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        tools:text="The bear who could"
+        android:layout_marginRight="50dp"
+        android:layout_alignLeft="@+id/bookTitle"
+        android:paddingTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/authors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/bookCover"
+        android:layout_alignRight="@+id/bookCover"
+        android:layout_below="@+id/bookSubTitle"
+        android:layout_marginTop="20dp"
+        android:textSize="@dimen/small_fontsize"
+        tools:text="Ian Myrfield"
+        android:layout_alignLeft="@+id/bookSubTitle"
+        android:paddingBottom="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/bookCover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/authors"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="false"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/book_cover"
+        tools:src="@drawable/placeholder"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentRight="false"
+        android:scaleType="fitStart"
+        />
+</RelativeLayout>
