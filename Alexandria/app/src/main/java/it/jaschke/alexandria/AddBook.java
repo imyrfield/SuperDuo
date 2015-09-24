@@ -29,12 +29,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private final int LOADER_ID = 1;
     private View rootView;
     private final String EAN_CONTENT="eanContent";
-    private static final String SCAN_FORMAT = "scanFormat";
-    private static final String SCAN_CONTENTS = "scanContents";
     private static final int SCAN_INT = 101;
-
-    private String mScanFormat = "Format:";
-    private String mScanContents = "Contents:";
 
     public AddBook(){
     }
@@ -72,14 +67,10 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                     ean = "978" + ean;
                 }
                 if (ean.length() < 13) {
-                    clearFields();
+                    // Erasing Detail?
+//                    clearFields();
                     return;
                 }
-
-//                // TODO: Check for internet
-//                if(!Utility.hasInternetAccess(getActivity())){
-//                    return;
-//                }
 
                 //Once we have an ISBN, start a book intent
                 Intent bookIntent = new Intent(getActivity(), BookService.class);
@@ -143,11 +134,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             ean.setText(savedInstanceState.getString(EAN_CONTENT));
             ean.setHint("");
         }
-
-//        String result = getActivity().getIntent().getStringExtra("result");
-//        if (result != null){
-//            ean.setText(result);
-//        }
 
         return rootView;
     }
@@ -227,17 +213,12 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == MainActivity.RESULT_OK){
-            switch (requestCode){
-                case SCAN_INT:
-//                    Toast toast = Toast.makeText(getActivity(),
-//                            data.getStringExtra("result"),
-//                            Toast.LENGTH_LONG);
-//                    toast.show();
-
-                ean.setText(data.getStringExtra("result"));
-            }
-        }
+//        if(resultCode == MainActivity.RESULT_OK){
+//            switch (requestCode){
+//                case SCAN_INT:
+//                ean.setText(data.getStringExtra("result"));
+//            }
+//        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 

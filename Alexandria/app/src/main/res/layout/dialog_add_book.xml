@@ -1,73 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal|top"
-    android:orientation="horizontal"
-    tools:context="it.jaschke.alexandria.AddBook"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
     >
 
-    <TextView
-        android:id="@+id/bookTitle"
+    <LinearLayout
+        android:id="@+id/eancontainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/bookCover"
-        android:layout_alignRight="@+id/bookCover"
-        android:layout_marginTop="25dp"
-        android:paddingRight="20dp"
-        android:textIsSelectable="true"
-        android:textSize="@dimen/head_line"
-        android:textStyle="bold"
-        tools:text="Paddington Bear"
-        android:layout_marginRight="40dp"
-        />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        >
 
-    <TextView
-        android:id="@+id/bookSubTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/bookCover"
-        android:layout_alignRight="@+id/bookCover"
-        android:layout_below="@+id/bookTitle"
-        android:layout_marginTop="10dp"
-        android:ellipsize="end"
-        android:maxLines="3"
-        tools:text="The bear who could"
-        android:layout_marginRight="50dp"
-        android:layout_alignLeft="@+id/bookTitle"
-        android:paddingTop="10dp"
-        />
+        <EditText
+            android:id="@+id/ean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_hint"
+            android:inputType="number"
+            android:maxLength="@integer/ean_size"
+            android:maxLines="1"
+            android:minEms="@integer/ean_width"
+            android:paddingRight="20dp"
+            android:paddingTop="20dp"
+            android:saveEnabled="true"
+            />
 
-    <TextView
-        android:id="@+id/authors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/bookCover"
-        android:layout_alignRight="@+id/bookCover"
-        android:layout_below="@+id/bookSubTitle"
-        android:layout_marginTop="20dp"
-        android:textSize="@dimen/small_fontsize"
-        tools:text="Ian Myrfield"
-        android:layout_alignLeft="@+id/bookSubTitle"
-        android:paddingBottom="10dp"
-        />
+        <Button
+            android:id="@+id/scan_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/scan_button"
+            />
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/bookCover"
+    <LinearLayout
+        android:id="@+id/bookContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/authors"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="false"
-        android:adjustViewBounds="false"
-        android:contentDescription="@string/book_cover"
-        tools:src="@drawable/placeholder"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentRight="false"
-        android:scaleType="fitStart"
-        />
-</RelativeLayout>
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="8dp"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:visibility="gone"
+        tools:context="it.jaschke.alexandria.AddBook"
+        >
+
+        <ImageView
+            android:id="@+id/bookCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="16dp"
+            android:layout_weight="10"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/book_cover"
+            android:scaleType="fitXY"
+            tools:src="@drawable/placeholder"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/bookTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/head_line"
+                android:textStyle="bold"
+                tools:text="Paddington Bear"
+                />
+
+            <TextView
+                android:id="@+id/bookSubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="marquee"
+                android:maxLines="3"
+                tools:text="The bear who could"
+                />
+
+            <TextView
+                android:id="@+id/authors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="marquee"
+                android:textSize="@dimen/small_fontsize"
+                tools:text="Ian Myrfield"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="#000000ff"
+            android:elevation="0dp"
+            android:text="@string/cancel_button"
+            android:textColor="@android:color/holo_red_light"
+            />
+
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:background="#000000ff"
+            android:elevation="0dp"
+            android:text="@string/action_add_book"
+            android:textColor="@android:color/holo_green_light"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+</LinearLayout>

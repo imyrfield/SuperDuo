@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,8 +51,8 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
             ean = arguments.getString(BookDetail.EAN_KEY);
             getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
-
-        rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
+Log.d("BookDetail", "onCreateView (line 54): ");
+        rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         rootView.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,9 +70,11 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.book_detail, menu);
-
         MenuItem menuItem = menu.findItem(R.id.action_share);
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        if (bookTitle != null) {
+            shareIntent(bookTitle);
+        }
     }
 
     @Override
@@ -95,11 +98,20 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
         ((TextView) rootView.findViewById(R.id.fullBookTitle)).setText(bookTitle);
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text)+bookTitle);
-        shareActionProvider.setShareIntent(shareIntent);
+        /**
+         *
+         *      Error Case: It used to cause errors when trying to initialize
+         *      shareIntent, as onLoadFinished was completed before
+         *      onCreateOptionsMenu.
+         *
+         *      Moved shareIntent creation to separate method, and added check for null
+         *      before initializing.
+         *
+         */
+
+        if (shareActionProvider != null) {
+            shareIntent(bookTitle);
+        }
 
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
         ((TextView) rootView.findViewById(R.id.fullBookSubTitle)).setText(bookSubTitle);
@@ -125,11 +137,6 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
         ((TextView) rootView.findViewById(R.id.categories)).setText(categories);
-
-        if(rootView.findViewById(R.id.right_container)!=null){
-            rootView.findViewById(R.id.backButton).setVisibility(View.INVISIBLE);
-        }
-
     }
 
     @Override
@@ -143,5 +150,13 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         if(MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container)==null){
             getActivity().getSupportFragmentManager().popBackStack();
         }
+    }
+
+    private void shareIntent(String title){
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + title);
+        shareActionProvider.setShareIntent(shareIntent);
     }
 }
