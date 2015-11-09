@@ -47,8 +47,6 @@ public class SimpleScannerActivity extends Activity implements ZBarScannerView.R
     @Override
     public void handleResult(Result rawResult) {
 
-        //TODO: Exit camera view once barcode has been recorded ??
-
         // Prints scan results
         Log.d("SimpleScannerActivity", "handleResult (line 39): " + rawResult.getContents());
         // Prints the scan format(qrcode, pdf417 etc.)

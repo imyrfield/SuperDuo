@@ -9,7 +9,7 @@
     tools:ignore="MergeRootFrame"
     >
 
-    <fragment
+    <FrameLayout
         android:id="@+id/container"
         android:name="it.jaschke.alexandria.ListOfBooks"
         android:layout_width="match_parent"

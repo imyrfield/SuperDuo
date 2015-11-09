@@ -1,9 +1,7 @@
 package it.jaschke.alexandria;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,6 +12,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,214 +29,222 @@ import it.jaschke.alexandria.services.DownloadImage;
 /**
  * Created by Ian on 9/21/2015.
  */
-public class ScanDialog extends DialogFragment implements LoaderManager
-        .LoaderCallbacks<Cursor> {
+public class ScanDialog
+        extends DialogFragment
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
     private EditText ean;
-    private final int LOADER_ID = 1;
-    private final String EAN_CONTENT = "eanContent";
-    private static final int SCAN_INT = 101;
+    private final        int    LOADER_ID   = 1;
+    private final        String EAN_CONTENT = "eanContent";
+    private static final int    SCAN_INT    = 101;
     private View view;
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        view = getActivity().getLayoutInflater().inflate(R.layout.dialog_add_book, null);
-
-        builder.setView(view)
-                .setTitle(R.string.scan);
-
-        return builder.create();
-    }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView (LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
 
-        ean = (EditText) view.findViewById(R.id.ean);
 
-        ean.addTextChangedListener(new TextWatcher() {
+        view = inflater.inflate( R.layout.dialog_add_book, container, false );
+        ean = (EditText) view.findViewById( R.id.ean );
+
+        ean.addTextChangedListener( new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged (CharSequence s, int start, int count,
+                                           int after) {
                 //no need
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged (CharSequence s, int start, int before, int count) {
                 //no need
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged (Editable s) {
                 String ean = s.toString();
                 //catch isbn10 numbers
-                if (ean.length() == 10 && !ean.startsWith("978")) {
+                if (ean.length() == 10 && !ean.startsWith( "978" )) {
                     ean = "978" + ean;
                 }
                 if (ean.length() < 13) {
                     // Erasing Detail?
-//                    clearFields();
+                    //                    clearFields();
                     return;
                 }
 
                 //Once we have an ISBN, start a book intent
-                Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, ean);
-                bookIntent.setAction(BookService.FETCH_BOOK);
-                getActivity().startService(bookIntent);
+                Intent bookIntent = new Intent( getActivity(), BookService.class );
+                bookIntent.putExtra( BookService.EAN, ean );
+                bookIntent.setAction( BookService.FETCH_BOOK );
+                getActivity().startService( bookIntent );
 
                 ScanDialog.this.restartLoader();
             }
-        });
+        } );
 
-        view.findViewById(R.id.scan_button).setOnClickListener(new View.OnClickListener
-                () {
-            @Override
-            public void onClick(View v) {
+        view.findViewById( R.id.scan_button )
+            .setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick (View v) {
 
-                Context context = getActivity();
-                Intent intent = new Intent(context, SimpleScannerActivity.class);
-                startActivityForResult(intent, SCAN_INT);
-            }
-        });
+                    Context context = getActivity();
+                    Intent  intent  = new Intent( context, SimpleScannerActivity.class );
+                    startActivityForResult( intent, SCAN_INT );
+                }
+            } );
 
-        view.findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener
-                () {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        view.findViewById( R.id.addButton )
+            .setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick (View view) {
+                    dismiss();
+                }
+            } );
 
-        //TODO: Does it work ??
-        view.findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener
-                () {
-            @Override
-            public void onClick(View view) {
-                onCancel(getDialog());
-            }
-        });
+        view.findViewById( R.id.cancelButton )
+            .setOnClickListener( new View.OnClickListener() {
+                @Override
+                public void onClick (View view) {
+                    Intent bookIntent = new Intent( getActivity(), BookService.class );
+                    bookIntent.putExtra( BookService.EAN, ean.getText().toString() );
+                    bookIntent.setAction( BookService.DELETE_BOOK );
+                    getActivity().startService( bookIntent );
+                    ean.setText( "" );
+                    dismiss();
+                }
+            } );
 
         if (savedInstanceState != null) {
-            ean.setText(savedInstanceState.getString(EAN_CONTENT));
-            ean.setHint("");
+            ean.setText( savedInstanceState.getString( EAN_CONTENT ) );
+            ean.setHint( "" );
         }
 
-        return container;
+        return view;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public Dialog onCreateDialog (Bundle savedInstanceState) {
+
+        //        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //        view = getActivity().getLayoutInflater().inflate(R.layout.dialog_add_book,null);
+
+        //        builder.setView(view)
+        //                .setTitle(R.string.scan);
+
+        Dialog dialog = super.onCreateDialog( savedInstanceState );
+        dialog.setTitle( R.string.scan );
+        return dialog;
+    }
+
+    @Override
+    public void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState( outState );
         if (ean != null) {
-            outState.putString(EAN_CONTENT, ean.getText().toString());
+            outState.putString( EAN_CONTENT, ean.getText().toString() );
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult (int requestCode, int resultCode, Intent data) {
         if (resultCode == MainActivity.RESULT_OK) {
             switch (requestCode) {
                 case SCAN_INT:
-                    ean.setText(data.getStringExtra("result"));
+                    ean.setText( data.getStringExtra( "result" ) );
             }
         }
-        super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult( requestCode, resultCode, data );
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader (int id, Bundle args) {
         if (ean.getText().length() == 0) {
             return null;
         }
         String eanStr = ean.getText().toString();
-        if (eanStr.length() == 10 && !eanStr.startsWith("978")) {
+        if (eanStr.length() == 10 && !eanStr.startsWith( "978" )) {
             eanStr = "978" + eanStr;
         }
-        return new CursorLoader(
-                getActivity(),
-                AlexandriaContract.BookEntry.buildFullBookUri(Long.parseLong(eanStr)),
-                null,
-                null,
-                null,
-                null
-        );
+        return new CursorLoader( getActivity(),
+                                 AlexandriaContract.BookEntry.buildFullBookUri( Long.parseLong(
+                                         eanStr ) ),
+                                 null,
+                                 null,
+                                 null,
+                                 null );
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished (Loader<Cursor> loader, Cursor data) {
         if (!data.moveToFirst()) {
             return;
         }
 
         showDetails();
 
-        String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-        ((TextView) view.findViewById(R.id.bookTitle)).setText(bookTitle);
+        String bookTitle = data.getString( data.getColumnIndex( AlexandriaContract.BookEntry.TITLE ) );
+        ( (TextView) view.findViewById( R.id.bookTitle ) ).setText( bookTitle );
 
-        String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
-        ((TextView) view.findViewById(R.id.bookSubTitle)).setText(bookSubTitle);
+        String bookSubTitle = data.getString( data.getColumnIndex( AlexandriaContract.BookEntry.SUBTITLE ) );
+        ( (TextView) view.findViewById( R.id.bookSubTitle ) ).setText( bookSubTitle );
 
-        String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        ((TextView) view.findViewById(R.id.authors)).setLines(authorsArr.length);
-        ((TextView) view.findViewById(R.id.authors)).setText(authors.replace(",",
-                "\n"));
-        String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
-            new DownloadImage((ImageView) view.findViewById(R.id.bookCover)).execute
-                    (imgUrl);
-            view.findViewById(R.id.bookCover).setVisibility(View.VISIBLE);
+        String   authors    = data.getString( data.getColumnIndex( AlexandriaContract.AuthorEntry.AUTHOR ) );
+        String[] authorsArr = authors.split( "," );
+        ( (TextView) view.findViewById( R.id.authors ) ).setLines( authorsArr.length );
+        ( (TextView) view.findViewById( R.id.authors ) ).setText( authors.replace( ",",
+                                                                                   "\n" ) );
+        String imgUrl = data.getString( data.getColumnIndex( AlexandriaContract.BookEntry.IMAGE_URL ) );
+        if (Patterns.WEB_URL.matcher( imgUrl ).matches()) {
+            new DownloadImage( (ImageView) view.findViewById( R.id.bookCover ) ).execute(
+                    imgUrl );
+            view.findViewById( R.id.bookCover ).setVisibility( View.VISIBLE );
         }
 
-//        String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
-//        ((TextView) view.findViewById(R.id.categories)).setText(categories);
+        //        String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
+        //        ((TextView) view.findViewById(R.id.categories)).setText(categories);
 
-//        view.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
-//        view.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
+        //        view.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
+        //        view.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset (Loader<Cursor> loader) {
 
     }
 
-    public void restartLoader() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
+    public void restartLoader () {
+        getLoaderManager().restartLoader( LOADER_ID, null, this );
     }
 
-    private void showDetails() {
+    private void showDetails () {
 
-        View details = view.findViewById(R.id.bookContainer);
+        View details = view.findViewById( R.id.bookContainer );
         if (details == null) {
             return;
         }
 
-        Button addButton = (Button) view.findViewById(R.id.addButton);
-        if(addButton == null) {
+        Button addButton = (Button) view.findViewById( R.id.addButton );
+        if (addButton == null) {
             return;
         }
 
         if (details.getVisibility() == View.GONE) {
-            details.setVisibility(View.VISIBLE);
-            addButton.setVisibility(View.VISIBLE);
+            details.setVisibility( View.VISIBLE );
+            addButton.setVisibility( View.VISIBLE );
         } else {
-            details.setVisibility(View.GONE);
-            addButton.setVisibility(View.GONE);
+            details.setVisibility( View.GONE );
+            addButton.setVisibility( View.GONE );
         }
     }
 
     @Override
-    public void onCancel(DialogInterface dialog) {
-
-        Intent bookIntent = new Intent(getActivity(), BookService.class);
-        bookIntent.putExtra(BookService.EAN, ean.getText().toString());
-        bookIntent.setAction(BookService.DELETE_BOOK);
-        getActivity().startService(bookIntent);
-        ean.setText("");
-
-        super.onCancel(dialog);
+    public void dismiss () {
+        boolean isTablet = getResources().getBoolean( R.bool.large_layout );
+        if (!isTablet) {
+            Log.d( "ScanDialog", "dismiss (line 262): should navigate back" );
+            getFragmentManager().popBackStack();
+        }
+        super.dismiss();
     }
 }

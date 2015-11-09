@@ -62,7 +62,10 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void deleteBook(String ean) {
-        if(ean!=null) {
+    /**
+    *           Error Case: Caused App to crash if ean field was blank.
+    */
+        if(ean!=null && !ean.equals("")) {
             getContentResolver().delete(AlexandriaContract.BookEntry.buildBookUri(Long.parseLong(ean)), null, null);
         }
     }

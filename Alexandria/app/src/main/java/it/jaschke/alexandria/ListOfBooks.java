@@ -39,7 +39,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-Log.d("ListOfBooks", "onCreateView (line 42): ");
+        Log.d("ListOfBooks", "onCreateView (line 42): ");
         Cursor cursor = getActivity().getContentResolver().query(
                 AlexandriaContract.BookEntry.CONTENT_URI,
                 null, // leaving "columns" null just returns all the columns.
@@ -138,11 +138,10 @@ Log.d("ListOfBooks", "onCreateView (line 42): ");
 
     @Override
     public void onResume() {
-
-        //TODO: update list after returning from dialog.
         restartLoader();
         Log.d("ListOfBooks", "onResume (line 142): ");
         super.onResume();
     }
+
 }
 

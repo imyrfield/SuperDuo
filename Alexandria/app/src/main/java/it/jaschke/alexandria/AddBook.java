@@ -78,7 +78,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 bookIntent.setAction(BookService.FETCH_BOOK);
                 getActivity().startService(bookIntent);
 
-                //TODO: Start a Dialog with Save? Yes/No
                 // Pass EAN to dialog,
                 // fill views of dialog.
                 // if yes, do nothing, book is already in database.

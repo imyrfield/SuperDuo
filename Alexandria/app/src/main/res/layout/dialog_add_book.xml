@@ -5,8 +5,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:layout_margin="8dp"
     android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+
     >
 
     <LinearLayout
@@ -14,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
@@ -50,8 +54,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
         android:orientation="horizontal"
-        android:weightSum="10"
         android:visibility="gone"
+        android:weightSum="10"
         tools:context="it.jaschke.alexandria.AddBook"
         >
 
@@ -63,7 +67,7 @@
             android:layout_weight="10"
             android:adjustViewBounds="true"
             android:contentDescription="@string/book_cover"
-            android:scaleType="fitXY"
+            android:scaleType="centerInside"
             tools:src="@drawable/placeholder"
             />
 
