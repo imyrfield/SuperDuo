@@ -30,6 +30,7 @@ import barqsoft.footballscores.R;
  */
 public class myFetchService extends IntentService
 {
+    public static final String ACTION_DATA_UPDATED = "barqsoft.footballscores.app.ACTION_DATA_UPDATED";
     public static final String LOG_TAG = "myFetchService";
     public myFetchService()
     {
@@ -48,8 +49,8 @@ public class myFetchService extends IntentService
     private void getData (String timeFrame)
     {
         //Creating fetch URL
-        final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
-        final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
+        final String BASE_URL = getString( R.string.BASE_URL); //Base URL
+        final String QUERY_TIME_FRAME = getString( R.string.query_time_frame); //Time Frame parameter to determine days
         //final String QUERY_MATCH_DAY = "matchday";
 
         Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
@@ -111,7 +112,7 @@ public class myFetchService extends IntentService
         try {
             if (JSON_data != null) {
                 //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
-                JSONArray matches = new JSONObject(JSON_data).getJSONArray("fixtures");
+                JSONArray matches = new JSONObject(JSON_data).getJSONArray(getString( R.string.fixtures));
                 if (matches.length() == 0) {
                     //if there is no data, call the function on dummy data
                     //this is expected behavior during the off season.
@@ -149,8 +150,8 @@ public class myFetchService extends IntentService
         final String EREDIVISIE = "404";
 
 
-        final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
-        final String MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
+        final String SEASON_LINK = getString( R.string.url_seasons);
+        final String MATCH_LINK = getString( R.string.url_matches);
         final String FIXTURES = "fixtures";
         final String LINKS = "_links";
         final String SOCCER_SEASON = "soccerseason";
@@ -265,6 +266,8 @@ public class myFetchService extends IntentService
             inserted_data = mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI,insert_data);
 
+            updateWidgets();
+
             //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
         }
         catch (JSONException e)
@@ -272,6 +275,13 @@ public class myFetchService extends IntentService
             Log.e(LOG_TAG,e.getMessage());
         }
 
+    }
+
+    private void updateWidgets() {
+        Context context = getApplicationContext();
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
     }
 }
 

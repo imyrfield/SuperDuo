@@ -1,4 +1,5 @@
 <resources>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -7,4 +8,12 @@
     <dimen name="TeamNames">17sp</dimen>
     <dimen name="Score">30sp</dimen>
     <dimen name="League">15sp</dimen>
+    
+    <!-- Today Widget -->
+    <dimen name="widget_today_default_width">250dp</dimen>
+    <dimen name="widget_today_default_height">40dp</dimen>
+    <dimen name="widget_list_min_height">180dp</dimen>
+    <dimen name="widget_list_min_resize_height">320dp</dimen>
+    <dimen name="widget_list_min_width">250dp</dimen>
+    <dimen name="widget_list_min_resize_width">@dimen/widget_list_min_width</dimen>
 </resources>

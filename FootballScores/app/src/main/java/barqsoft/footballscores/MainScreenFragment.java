@@ -34,10 +34,12 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         Intent service_start = new Intent(getActivity(), myFetchService.class);
         getActivity().startService(service_start);
     }
+
     public void setFragmentDate(String date)
     {
         fragmentdate[0] = date;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
