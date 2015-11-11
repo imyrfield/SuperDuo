@@ -190,10 +190,13 @@ public class ScanDialog
         ( (TextView) view.findViewById( R.id.bookSubTitle ) ).setText( bookSubTitle );
 
         String   authors    = data.getString( data.getColumnIndex( AlexandriaContract.AuthorEntry.AUTHOR ) );
-        String[] authorsArr = authors.split( "," );
-        ( (TextView) view.findViewById( R.id.authors ) ).setLines( authorsArr.length );
-        ( (TextView) view.findViewById( R.id.authors ) ).setText( authors.replace( ",",
-                                                                                   "\n" ) );
+        if(authors != null) {
+            String[] authorsArr = authors.split( "," );
+            ( (TextView) view.findViewById( R.id.authors ) ).setLines( authorsArr.length );
+            ( (TextView) view.findViewById( R.id.authors ) ).setText( authors.replace( ",",
+                                                                                       "\n" ) );
+        }
+
         String imgUrl = data.getString( data.getColumnIndex( AlexandriaContract.BookEntry.IMAGE_URL ) );
         if (Patterns.WEB_URL.matcher( imgUrl ).matches()) {
             new DownloadImage( (ImageView) view.findViewById( R.id.bookCover ) ).execute(

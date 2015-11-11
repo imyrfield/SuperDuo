@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import it.jaschke.alexandria.api.Callback;
@@ -54,6 +54,14 @@ public class MainActivity
         IntentFilter filter = new IntentFilter( MESSAGE_EVENT );
         LocalBroadcastManager.getInstance( this )
                              .registerReceiver( messageReciever, filter );
+    }
+
+    @Override
+    protected void onRestoreInstanceState (Bundle savedInstanceState) {
+        super.onRestoreInstanceState( savedInstanceState );
+        if (IS_TABLET && findViewById( R.id.right_container ) !=  null) {
+            getSupportFragmentManager().popBackStack( "detail", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
     }
 
     public void setTitle (int titleId) {
@@ -122,16 +130,6 @@ public class MainActivity
             }
         }
     }
-
-    public void goBack (View view) {
-        getSupportFragmentManager().popBackStack();
-    }
-
-    //    private boolean isTablet() {
-    //        return (getApplicationContext().getResources().getConfiguration().screenLayout
-    //                & Configuration.SCREENLAYOUT_SIZE_MASK)
-    //                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-    //    }
 
     @Override
     public void onBackPressed () {
